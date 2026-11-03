@@ -3,7 +3,7 @@ const { IOS_TEAM_ID: team, IOS_PROFILE_UUID: uuid, IOS_CERT_SHA1: certificate } 
 if (!/^[A-Z0-9]{10}$/.test(team || '') || !/^[0-9A-Fa-f-]{36}$/.test(uuid || '') || !/^[0-9A-F]{40}$/.test(certificate || '')) {
   throw new Error('Identité de signature non validée. Exécuter install-signing.sh auparavant.');
 }
-// Configure only the App target, so the provisioning profile is never forced onto SPM libraries.
+// Configure only the App target, so the provisioning profile is never forced onto Pod libraries.
 const file = 'ios/App/App.xcodeproj/project.pbxproj';
 let project = await readFile(file, 'utf8');
 const matches = [...project.matchAll(/CODE_SIGN_STYLE = Automatic;/g)];

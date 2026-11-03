@@ -32,20 +32,31 @@ def inspect_ipa(file):
         count = struct.unpack_from('<I', data, 16)[0]
         cursor = 32
         platforms = []
+        libraries = []
         for _ in range(count):
             command, size = struct.unpack_from('<II', data, cursor)
             if size < 8 or cursor + size > len(data):
                 raise ValueError('Commande de chargement Mach-O invalide.')
             if command == 0x32:
                 platforms.append(struct.unpack_from('<I', data, cursor + 8)[0])
+            if command in (0xC, 0x80000018, 0x8000001F):
+                name_offset = struct.unpack_from('<I', data, cursor + 8)[0]
+                libraries.append(data[cursor + name_offset:cursor + size].split(b'\0')[0].decode('utf-8'))
             cursor += size
         if platforms != [2]:
             raise ValueError('La plateforme Mach-O doit être iOS (2), pas iOS Simulator (7).')
+        runtime_frameworks = ('Capacitor.framework/', 'Cordova.framework/')
+        if any(any(framework in library for framework in runtime_frameworks) for library in libraries):
+            raise ValueError('Le runtime Capacitor/Cordova doit être statique, sans dépendance dynamique à signer.')
+        if any('/Frameworks/Capacitor.framework/' in name or '/Frameworks/Cordova.framework/' in name for name in names):
+            raise ValueError('Un framework dynamique du runtime reste embarqué.')
+        if root + 'native-bridge.js' not in names:
+            raise ValueError('Le pont JavaScript du runtime statique manque dans le bundle principal.')
         if root + 'embedded.mobileprovision' in names or root + '_CodeSignature/CodeResources' in names:
             raise ValueError('Cet artefact doit rester sans profil ni signature de distribution.')
         return {'bundle_id': info['CFBundleIdentifier'], 'platform': 'iPhoneOS',
                 'architecture': 'arm64', 'minimum_ios': info.get('MinimumOSVersion'),
-                'distribution_signed': False}
+                'distribution_signed': False, 'runtime_linkage': 'static'}
 
 
 if __name__ == '__main__':

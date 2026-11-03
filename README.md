@@ -1,5 +1,7 @@
 # À L’AFFICHE — iOS et PWA
 
+**Version 0.1.1 : runtime Capacitor/Cordova lié statiquement.** Cette version retire les deux frameworks dynamiques à signer séparément, après identification d’un rejet de signature de `Capacitor.framework` au démarrage. Une signature valide de l’application et un provisionnement adapté restent indispensables sur iPhone.
+
 **Reconstruction du 3 novembre 2026.** L’archive `a-laffiche-pwa.zip` de la conversation précédente n’était pas accessible. Ce projet reprend sa description ; ce n’est pas une conversion vérifiée de ses fichiers d’origine. Le catalogue fourni contient huit programmes fictifs et ne constitue pas un guide TV actualisé.
 
 Le projet contient une PWA fonctionnelle et une application iOS hybride : **navigation, onglets et recherche natifs UIKit**, catalogue embarqué dans **Capacitor / WKWebView**. Les cartes, catégories, fiches et favoris sont rendus en HTML/CSS. Il ne s’agit donc pas d’une interface intégralement écrite en SwiftUI.
@@ -38,7 +40,7 @@ Le service worker n’est activé qu’en production web et ne s’enregistre pa
 
 ## Compiler sur Mac
 
-Le projet utilise Capacitor **8.6.0**, Node.js **24**, iOS **15.4 minimum** et Swift Package Manager. Le minimum iOS 15.4 assure la disponibilité des panneaux web `<dialog>` utilisés par les fiches. Le workflow sélectionne explicitement **Xcode 26.3** sur `macos-15`. Ce chemin est à adapter si GitHub modifie les versions préinstallées. [Prérequis Capacitor](https://capacitorjs.com/docs/getting-started/environment-setup), [image macOS GitHub](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md).
+Le projet utilise Capacitor **8.6.0**, Node.js **24**, iOS **15.4 minimum** et **CocoaPods en liaison statique**. Le minimum iOS 15.4 assure la disponibilité des panneaux web `<dialog>` utilisés par les fiches. Le workflow sélectionne explicitement **Xcode 26.3** sur `macos-15`. Ce chemin est à adapter si GitHub modifie les versions préinstallées. [Prérequis Capacitor](https://capacitorjs.com/docs/getting-started/environment-setup), [image macOS GitHub](https://github.com/actions/runner-images/blob/main/images/macos/macos-15-Readme.md).
 
 ```sh
 npm ci
@@ -48,7 +50,7 @@ npm run check
 npm run ios:open
 ```
 
-Ouvrir le projet **`ios/App/App.xcodeproj`**, schéma **App**. Il n’y a pas de CocoaPods ni de `.xcworkspace` autonome à utiliser ici. Le projet iOS est déjà créé : ne pas lancer `cap add ios` à nouveau et ne pas supprimer le dossier `ios/`, qui contient la navigation personnalisée.
+Installer CocoaPods sur Mac si nécessaire. `npm run ios:sync` exécute `pod install`, qui prépare les dépendances natives. Ouvrir ensuite **`ios/App/App.xcworkspace`**, schéma **App**, pour inclure ces dépendances. Le projet iOS est déjà créé : ne pas lancer `cap add ios` à nouveau et ne pas supprimer le dossier `ios/`, qui contient la navigation personnalisée.
 
 Choisir d’abord un simulateur pour vérifier le lancement, les quatre onglets, la recherche, l’import et les favoris. Pour un iPhone réel, sélectionner votre équipe dans « Signing & Capabilities » et un Bundle ID disponible. Pour modifier l’identifiant dans les fichiers :
 
@@ -70,7 +72,7 @@ Cet artefact contient une application pour le **simulateur sur Mac**. Il n’est
 
 ## Télécharger une IPA iPhone non signée
 
-Le workflow **Produire une IPA iPhone non signée** compile une version Release **pour iPhone arm64**, puis crée `A-LAFFICHE-NON-SIGNEE.ipa`. Il se lance automatiquement pour les changements du projet ou manuellement dans Actions. Après succès, télécharger l’artefact **A-LAFFICHE-IPA-NON-SIGNEE-…** et extraire le fichier `.ipa` du ZIP GitHub.
+Le workflow **Produire une IPA iPhone non signée** compile une version Release **pour iPhone arm64**, puis crée `A-LAFFICHE-0.1.1-NON-SIGNEE.ipa`. Il se lance automatiquement pour les changements du projet ou manuellement dans Actions. Après succès, télécharger l’artefact **A-LAFFICHE-IPA-NON-SIGNEE-…** et extraire le fichier `.ipa` du ZIP GitHub.
 
 La première IPA a été produite et vérifiée le 3 novembre 2026 : [compilation réussie et téléchargement](https://github.com/akaRukasu/L-affiche/actions/runs/41680025307). Les artefacts GitHub sont conservés sept jours ; relancer le workflow pour obtenir un nouveau téléchargement après expiration.
 
@@ -121,7 +123,8 @@ public/                            Icônes PWA, manifest, exemple JSON
 dist/                              Version web compilée, régénérable
 ios/App/App.xcodeproj/              Projet Xcode et schéma partagé App
 ios/App/App/SceneDelegate.swift     Navigation UIKit + connexion à la WKWebView
-ios/App/CapApp-SPM/                 Dépendances Swift gérées par Capacitor
+ios/App/Podfile                    Dépendances CocoaPods en liaison statique
+ios/App/App.xcworkspace/            Workspace Xcode intégrant les Pods
 scripts/                           Configuration, cache et contrôles de signature
 tests/                             Tests du catalogue et des profils Apple
 docs/                              Signature, validation et provenance de l’icône

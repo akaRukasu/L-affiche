@@ -34,8 +34,7 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p build
-          xcodebuild -resolvePackageDependencies -project ios/App/App.xcodeproj -scheme App
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Debug \
+          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Debug \
             -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData \
             CODE_SIGNING_ALLOWED=NO build | tee build/simulator.log
           ditto -c -k --sequesterRsrc --keepParent build/DerivedData/Build/Products/Debug-iphonesimulator/App.app build/A-LAFFICHE-simulateur.zip

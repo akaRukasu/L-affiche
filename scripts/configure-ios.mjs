@@ -1,12 +1,14 @@
 import { readFile, writeFile, copyFile } from 'node:fs/promises';
 const config = JSON.parse(await readFile('capacitor.config.json', 'utf8'));
+const version = JSON.parse(await readFile('package.json', 'utf8')).version;
+if (!/^\d+\.\d+\.\d+$/.test(version)) throw new Error('Version iOS invalide.');
 const bundleID = process.env.IOS_BUNDLE_ID || config.appId;
 if (!/^[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+){2,}$/.test(bundleID)) throw new Error('IOS_BUNDLE_ID invalide.');
 config.appId = bundleID;
 await writeFile('capacitor.config.json', JSON.stringify(config, null, 2) + '\n');
 const project = 'ios/App/App.xcodeproj/project.pbxproj';
 const contents = await readFile(project, 'utf8');
-await writeFile(project, contents.replace(/PRODUCT_BUNDLE_IDENTIFIER = [^;]+;/g, `PRODUCT_BUNDLE_IDENTIFIER = ${bundleID};`).replace(/MARKETING_VERSION = [^;]+;/g, 'MARKETING_VERSION = 0.1.0;').replace(/IPHONEOS_DEPLOYMENT_TARGET = [^;]+;/g, 'IPHONEOS_DEPLOYMENT_TARGET = 15.4;'));
+await writeFile(project, contents.replace(/PRODUCT_BUNDLE_IDENTIFIER = [^;]+;/g, `PRODUCT_BUNDLE_IDENTIFIER = ${bundleID};`).replace(/MARKETING_VERSION = [^;]+;/g, `MARKETING_VERSION = ${version};`).replace(/IPHONEOS_DEPLOYMENT_TARGET = [^;]+;/g, 'IPHONEOS_DEPLOYMENT_TARGET = 15.4;'));
 const icon = 'ios/App/App/Assets.xcassets/AppIcon.appiconset';
 await copyFile('assets/AppIcon-1024.png', `${icon}/AppIcon-1024.png`);
 await writeFile(`${icon}/Contents.json`, JSON.stringify({ images: [{ filename: 'AppIcon-1024.png', idiom: 'universal', platform: 'ios', size: '1024x1024' }], info: { author: 'xcode', version: 1 } }, null, 2) + '\n');

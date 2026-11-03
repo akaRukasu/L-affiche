@@ -2,7 +2,9 @@
 
 ## Ce que contient le livrable
 
-Des sources, un projet Xcode et trois workflows : simulateur, IPA iPhone non signée et export signé. Le workflow `ios-unsigned-ipa.yml` construit un vrai binaire **iPhone arm64** et fournit `A-LAFFICHE-NON-SIGNEE.ipa` après une exécution réussie. Ce fichier **ne possède pas de signature Apple de distribution valide** et nécessite une signature et un provisionnement valides avant installation.
+Des sources, un projet Xcode et quatre workflows : simulateur, lancement réel sur simulateur, IPA iPhone non signée et export signé. Le workflow `ios-unsigned-ipa.yml` construit un vrai binaire **iPhone arm64** et fournit `A-LAFFICHE-0.1.1-NON-SIGNEE.ipa` après une exécution réussie. Ce fichier **ne possède pas de signature Apple de distribution valide** et nécessite une signature et un provisionnement valides avant installation.
+
+La version 0.1.1 lie Capacitor et Cordova statiquement dans l’exécutable principal. Elle évite la nécessité de signer séparément `Capacitor.framework` et `Cordova.framework`. Sur les anciennes versions dynamiques, signer uniquement l’exécutable principal ne suffit pas : une signature invalide d’un framework peut provoquer une fermeture par le chargeur système avant l’exécution du code de l’application.
 
 Renommer la version simulateur ou son ZIP en `.ipa` ne la convertirait pas en application iPhone. Le workflow non signé compile séparément pour `generic/platform=iOS` et contrôle la plateforme du binaire. Pour une IPA immédiatement adaptée à votre méthode de distribution, utiliser le workflow signé avec les éléments décrits ci-dessous.
 

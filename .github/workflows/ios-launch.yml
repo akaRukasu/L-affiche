@@ -50,7 +50,7 @@ jobs:
         run: |
           set -o pipefail
           mkdir -p build
-          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+          xcodebuild -workspace ios/App/App.xcworkspace -scheme App -configuration Release \
             -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData \
             ARCHS="$(uname -m)" CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES build | tee build/launch-build.log
       - name: Installer puis vérifier le lancement réel

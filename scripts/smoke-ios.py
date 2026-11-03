@@ -65,7 +65,9 @@ try:
     state = run('ps', '-p', str(pid), '-o', 'stat=', '-o', 'command=', check=False)
     summary['process'] = state.stdout.strip()
     summary['survived_launch'] = state.returncode == 0 and not state.stdout.lstrip().startswith('Z') and '/App.app/App' in state.stdout
-    simctl('io', udid, 'screenshot', str(output / 'startup.png'), check=False)
+    capture = simctl('io', udid, 'screenshot', str(output / 'startup.png'), check=False)
+    if capture.returncode and 'Cannot choose between' in capture.stderr:
+        simctl('io', udid, 'screenshot', '--display=1', str(output / 'startup.png'), check=False)
     if not summary['survived_launch']:
         raise RuntimeError('L’application a quitté dans les 15 secondes suivant son lancement.')
 finally:
@@ -76,7 +78,7 @@ finally:
              pathlib.Path.home() / f'Library/Developer/CoreSimulator/Devices/{udid}/data/Library/Logs/CrashReporter']
     for root in roots:
         if root.exists():
-            for report in root.glob('App*'):
+            for report in list(root.glob('App-*')) + list(root.glob('App_*')):
                 if report.is_file() and report.stat().st_mtime >= started:
                     shutil.copyfile(report, output / report.name)
     (output / 'result.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding='utf-8')
