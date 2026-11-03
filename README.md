@@ -78,6 +78,12 @@ La première IPA a été produite et vérifiée le 3 novembre 2026 : [compilatio
 
 Pour obtenir directement une IPA signée, utiliser le workflow suivant avec les éléments Apple requis.
 
+## Vérifier le lancement
+
+Le workflow **Tester le lancement iPhone** compile la version Release, l’installe sur un simulateur compatible et vérifie que son processus reste actif pendant les quinze premières secondes. Il conserve les journaux et une capture lorsqu’elle est disponible. Il couvre iOS 26 et iOS 27 ; le modèle de simulateur dépend des modèles pris en charge par chaque runtime.
+
+Les deux essais de [l’exécution 41684281009](https://github.com/akaRukasu/L-affiche/actions/runs/41684281009) ont réussi : iOS 26.2 sur iPhone 17 Pro simulé et iOS 27.1 sur iPhone Duo simulé. Le rendu du catalogue a aussi été confirmé sur la capture iOS 26.2. Ces essais ne valident pas une IPA resignée sur un appareil réel : un éventuel plantage sur iPhone demande le rapport de cet appareil.
+
 ## Obtenir une IPA signée
 
 La procédure détaillée se trouve dans [docs/SIGNATURE-IOS.md](docs/SIGNATURE-IOS.md). Elle nécessite un compte Apple Developer adapté à la distribution, un App ID explicite, un certificat de distribution **avec sa clé privée**, et un profil correspondant.
@@ -105,6 +111,7 @@ Après succès, ouvrir l’exécution puis **Artifacts → A-LAFFICHE-IPA-…**.
 
 ```text
 .github/workflows/ios-check.yml     Compilation simulateur sans secrets
+.github/workflows/ios-launch.yml    Installation et test de lancement sur simulateurs iOS 26/27
 .github/workflows/ios-unsigned-ipa.yml  IPA iPhone arm64, sans signature de distribution
 .github/workflows/ios-ipa.yml       Archive et export signés, lancement manuel
 assets/AppIcon-1024.png             Icône RGB opaque 1024 × 1024
@@ -126,4 +133,4 @@ Les horaires de démonstration sont recalculés au lancement puis progressent av
 
 La navigation iOS native et le catalogue web forment une application hybride. Les fiches en panneau sont des composants web ; les gestes système, VoiceOver, les tailles de texte et le comportement du clavier doivent encore être vérifiés sur simulateur et iPhone. Une publication App Store nécessite aussi des données utiles, les informations de confidentialité et une revue de conformité. La présence de Capacitor et de commandes natives ne garantit pas l’acceptation Apple. [Critère Apple 4.2](https://developer.apple.com/app-store/review/guidelines/#minimum-functionality).
 
-La compilation et les contrôles sont détaillés dans [docs/VERIFICATION.md](docs/VERIFICATION.md). Les sources et les trois workflows sont publiés dans [akaRukasu/L-affiche](https://github.com/akaRukasu/L-affiche).
+La compilation et les contrôles sont détaillés dans [docs/VERIFICATION.md](docs/VERIFICATION.md). Les sources et les quatre workflows sont publiés dans [akaRukasu/L-affiche](https://github.com/akaRukasu/L-affiche).

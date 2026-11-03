@@ -33,6 +33,10 @@ Quatre tests supplémentaires vérifient le contrôle d’IPA, dont le rejet d�
 
 ## Signature et rendu restant à vérifier
 
+Un test de lancement réel sur simulateur a été ajouté : [exécution 41684281009](https://github.com/akaRukasu/L-affiche/actions/runs/41684281009), commit `962c48f286f0db0883cfc6485ed21e66b2f84e9a`. La version Release reste active après quinze secondes sur iOS 26.2 (iPhone 17 Pro simulé, Xcode 26.3) et iOS 27.1 (iPhone Duo simulé, Xcode 27.1). La capture iOS 26.2 montre le catalogue et les contrôles natifs. Sur iOS 27.1, la capture n’a pas été obtenue car le modèle de simulateur expose deux écrans ; le contrôle du processus a réussi. Aucun rapport de crash de l’application n’a été produit pendant ces tests.
+
+Ces essais ne reproduisent pas une fermeture immédiate sur un iPhone réel après signature par un outil tiers. Ils ne permettent pas d’en déduire la cause. Le rapport de plantage de l’appareil est nécessaire pour poursuivre ce diagnostic ; aucun correctif de démarrage natif n’est revendiqué sur la seule base de ces résultats.
+
 Les tests de profil utilisent des données fictives. Aucun certificat, aucune clé privée ni aucun profil réel n’a été fourni. L’import dans Trousseaux d’accès, l’archive signée pour iPhone, l’export signé et les contrôles associés restent à valider dans le workflow signé avec vos secrets Apple. Le certificat est comparé aux empreintes des certificats du profil avant l’archive ; les vérifications de signature de l’IPA sont prévues après export, sans garantie d’acceptation par Apple ou l’appareil.
 
 La conformité visuelle native demande encore un essai sur simulateur puis sur iPhone : navigation à grands titres, changement d’onglets, recherche et clavier, import JSON, rotation, VoiceOver, grandes tailles de texte et persistance après relance.
