@@ -1,0 +1,67 @@
+name: Tester le lancement iPhone
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ios-launch.yml'
+      - 'scripts/smoke-ios.py'
+      - 'ios/**'
+      - 'src/**'
+      - 'public/**'
+      - 'package*.json'
+      - 'capacitor.config.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  launch:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-15
+            developer: /Applications/Xcode_26.3.app/Contents/Developer
+            ios: '26'
+          - runner: xcode-27
+            developer: /Applications/Xcode.app/Contents/Developer
+            ios: '27'
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 25
+    env:
+      DEVELOPER_DIR: ${{ matrix.developer }}
+      TEST_IOS_MAJOR: ${{ matrix.ios }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 24
+          cache: npm
+      - name: Préparer la version Release
+        run: |
+          npm ci
+          node scripts/configure-ios.mjs
+          npm run ios:sync
+          npm run check
+          xcodebuild -version
+      - name: Compiler l’application du simulateur
+        run: |
+          set -o pipefail
+          mkdir -p build
+          xcodebuild -project ios/App/App.xcodeproj -scheme App -configuration Release \
+            -destination 'generic/platform=iOS Simulator' -derivedDataPath build/DerivedData \
+            ARCHS="$(uname -m)" CODE_SIGN_IDENTITY=- CODE_SIGNING_ALLOWED=YES build | tee build/launch-build.log
+      - name: Installer puis vérifier le lancement réel
+        run: python3 scripts/smoke-ios.py build/DerivedData/Build/Products/Release-iphonesimulator/App.app
+      - name: Conserver capture et diagnostic
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
+        with:
+          name: diagnostic-lancement-iOS-${{ matrix.ios }}-${{ github.run_number }}
+          path: |
+            build/launch-ios-*/
+            build/launch-build.log
+          if-no-files-found: warn
+          retention-days: 7
