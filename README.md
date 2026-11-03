@@ -68,6 +68,14 @@ Sous PowerShell, définir d’abord `$env:IOS_BUNDLE_ID = 'fr.votreorganisation.
 
 Cet artefact contient une application pour le **simulateur sur Mac**. Il n’est pas installable sur un iPhone et ne contient pas d’IPA de distribution. La compilation Swift/Xcode et la génération de cet artefact ont été validées par l’exécution macOS ci-dessus.
 
+## Télécharger une IPA iPhone non signée
+
+Le workflow **Produire une IPA iPhone non signée** compile une version Release **pour iPhone arm64**, puis crée `A-LAFFICHE-NON-SIGNEE.ipa`. Il se lance automatiquement pour les changements du projet ou manuellement dans Actions. Après succès, télécharger l’artefact **A-LAFFICHE-IPA-NON-SIGNEE-…** et extraire le fichier `.ipa` du ZIP GitHub.
+
+**Cette IPA n’a pas de signature Apple de distribution valide et ne peut pas être installée telle quelle sur un iPhone.** Elle devra être signée et provisionnée correctement. Le contrôle vérifie la structure `Payload`, la plateforme iPhoneOS du bundle et la plateforme iOS du binaire arm64. Il rejette une version simulateur, même si son fichier de métadonnées a été renommé.
+
+Pour obtenir directement une IPA signée, utiliser le workflow suivant avec les éléments Apple requis.
+
 ## Obtenir une IPA signée
 
 La procédure détaillée se trouve dans [docs/SIGNATURE-IOS.md](docs/SIGNATURE-IOS.md). Elle nécessite un compte Apple Developer adapté à la distribution, un App ID explicite, un certificat de distribution **avec sa clé privée**, et un profil correspondant.
@@ -95,6 +103,7 @@ Après succès, ouvrir l’exécution puis **Artifacts → A-LAFFICHE-IPA-…**.
 
 ```text
 .github/workflows/ios-check.yml     Compilation simulateur sans secrets
+.github/workflows/ios-unsigned-ipa.yml  IPA iPhone arm64, sans signature de distribution
 .github/workflows/ios-ipa.yml       Archive et export signés, lancement manuel
 assets/AppIcon-1024.png             Icône RGB opaque 1024 × 1024
 capacitor.config.json              Bundle ID et dossier web embarqué
@@ -115,4 +124,4 @@ Les horaires de démonstration sont recalculés au lancement puis progressent av
 
 La navigation iOS native et le catalogue web forment une application hybride. Les fiches en panneau sont des composants web ; les gestes système, VoiceOver, les tailles de texte et le comportement du clavier doivent encore être vérifiés sur simulateur et iPhone. Une publication App Store nécessite aussi des données utiles, les informations de confidentialité et une revue de conformité. La présence de Capacitor et de commandes natives ne garantit pas l’acceptation Apple. [Critère Apple 4.2](https://developer.apple.com/app-store/review/guidelines/#minimum-functionality).
 
-La compilation et les contrôles sont détaillés dans [docs/VERIFICATION.md](docs/VERIFICATION.md). Les sources et les deux workflows sont publiés dans [akaRukasu/L-affiche](https://github.com/akaRukasu/L-affiche).
+La compilation et les contrôles sont détaillés dans [docs/VERIFICATION.md](docs/VERIFICATION.md). Les sources et les trois workflows sont publiés dans [akaRukasu/L-affiche](https://github.com/akaRukasu/L-affiche).

@@ -2,7 +2,9 @@
 
 ## Ce que contient le livrable
 
-Des sources, un projet Xcode et des workflows prêts à être exécutés. Il n’y a **aucune IPA produite dans cette préparation**. Renommer un ZIP en `.ipa`, ou fabriquer un dossier `Payload` sans signature, ne rendrait pas l’application installable.
+Des sources, un projet Xcode et trois workflows : simulateur, IPA iPhone non signée et export signé. Le workflow `ios-unsigned-ipa.yml` construit un vrai binaire **iPhone arm64** et fournit `A-LAFFICHE-NON-SIGNEE.ipa` après une exécution réussie. Ce fichier **ne possède pas de signature Apple de distribution valide** et nécessite une signature et un provisionnement valides avant installation.
+
+Renommer la version simulateur ou son ZIP en `.ipa` ne la convertirait pas en application iPhone. Le workflow non signé compile séparément pour `generic/platform=iOS` et contrôle la plateforme du binaire. Pour une IPA immédiatement adaptée à votre méthode de distribution, utiliser le workflow signé avec les éléments décrits ci-dessous.
 
 ## Choisir la distribution
 
