@@ -38,15 +38,17 @@ available = [r for r in runtimes if r.get('isAvailable') and r.get('version', ''
 if not available:
     raise RuntimeError(f'Aucun runtime iOS {major} disponible sur ce runner.')
 runtime = sorted(available, key=lambda r: tuple(int(n) for n in r['version'].split('.')))[-1]
-types = json.loads(simctl('list', 'devicetypes', '-j').stdout)['devicetypes']
-device = next((d for d in types if d['name'] == 'iPhone 13 Pro'), None)
-if not device:
-    device = next(d for d in types if d['name'].startswith('iPhone'))
-udid = simctl('create', 'ALAffiche-startup-test', device['identifier'], runtime['identifier']).stdout.strip()
-summary = {'runtime': runtime['name'], 'device': device['name'], 'udid': udid,
+devices = json.loads(simctl('list', 'devices', 'available', '-j').stdout)['devices'].get(runtime['identifier'], [])
+iphones = [d for d in devices if d.get('isAvailable') and d['name'].startswith('iPhone')]
+if not iphones:
+    raise RuntimeError('Aucun simulateur iPhone préconfiguré compatible avec ce runtime.')
+device = next((d for d in iphones if d['name'] == 'iPhone 13 Pro'), iphones[0])
+udid = device['udid']
+summary = {'runtime': runtime['name'], 'device': device['name'], 'requested_device': 'iPhone 13 Pro', 'udid': udid,
            'timestamp_utc': dt.datetime.now(dt.timezone.utc).isoformat(), 'survived_launch': False}
 try:
-    simctl('boot', udid)
+    if device.get('state') != 'Booted':
+        simctl('boot', udid)
     simctl('bootstatus', udid, '-b', timeout=240)
     simctl('ui', udid, 'appearance', 'dark')
     simctl('status_bar', udid, 'override', '--time', '9:41', '--batteryState', 'charged', '--batteryLevel', '100', check=False)
