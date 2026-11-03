@@ -23,9 +23,17 @@ Le workflow `ios-check.yml` a réussi sur macOS avec **Xcode 26.3**, sans certif
 
 L’artefact `A-LAFFICHE-simulateur-1` a été téléchargé et inspecté. Son ZIP contient `App.app`, son exécutable et son `Info.plist`, avec le Bundle ID `fr.alaffiche.app`, la plateforme `iPhoneSimulator`, le minimum iOS 15.4 et Xcode 26.3. Ce fichier est destiné au simulateur sur Mac ; ce n’est pas une IPA pour iPhone. La durée de rétention configurée sur GitHub est de sept jours.
 
+## IPA iPhone non signée produite
+
+Le workflow `ios-unsigned-ipa.yml` a réussi sur macOS avec Xcode 26.3 le 3 novembre 2026 : [exécution 41680025307](https://github.com/akaRukasu/L-affiche/actions/runs/41680025307), commit `8b464680a52fef59f39041322dc27b81ae863da9`. Il compile séparément en Release pour un iPhone réel (`generic/platform=iOS`) et crée `A-LAFFICHE-NON-SIGNEE.ipa`.
+
+L’IPA a été téléchargée et contrôlée de nouveau localement : structure `Payload/App.app`, Bundle ID `fr.alaffiche.app`, métadonnées iPhoneOS, exécutable Mach-O arm64 ciblant iOS et minimum iOS 15.4. Aucun profil de provisionnement ni signature Apple de distribution valide n’est inclus. **Ce fichier nécessite une signature et un provisionnement valides avant installation sur iPhone.**
+
+Quatre tests supplémentaires vérifient le contrôle d’IPA, dont le rejet d’un binaire simulateur même avec des métadonnées modifiées. Le workflow passe maintenant quatre tests JavaScript et huit tests Python.
+
 ## Signature et rendu restant à vérifier
 
-Les tests de profil utilisent des données fictives. Aucun certificat, aucune clé privée ni aucun profil réel n’a été fourni. L’import dans Trousseaux d’accès, l’archive pour iPhone, l’export et la vérification d’une IPA restent à valider dans le workflow signé avec vos secrets Apple. Le certificat est comparé aux empreintes des certificats du profil avant l’archive ; les vérifications de signature de l’IPA sont prévues après export, sans garantie d’acceptation par Apple ou l’appareil.
+Les tests de profil utilisent des données fictives. Aucun certificat, aucune clé privée ni aucun profil réel n’a été fourni. L’import dans Trousseaux d’accès, l’archive signée pour iPhone, l’export signé et les contrôles associés restent à valider dans le workflow signé avec vos secrets Apple. Le certificat est comparé aux empreintes des certificats du profil avant l’archive ; les vérifications de signature de l’IPA sont prévues après export, sans garantie d’acceptation par Apple ou l’appareil.
 
 La conformité visuelle native demande encore un essai sur simulateur puis sur iPhone : navigation à grands titres, changement d’onglets, recherche et clavier, import JSON, rotation, VoiceOver, grandes tailles de texte et persistance après relance.
 

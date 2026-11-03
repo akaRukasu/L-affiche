@@ -72,6 +72,8 @@ Cet artefact contient une application pour le **simulateur sur Mac**. Il n’est
 
 Le workflow **Produire une IPA iPhone non signée** compile une version Release **pour iPhone arm64**, puis crée `A-LAFFICHE-NON-SIGNEE.ipa`. Il se lance automatiquement pour les changements du projet ou manuellement dans Actions. Après succès, télécharger l’artefact **A-LAFFICHE-IPA-NON-SIGNEE-…** et extraire le fichier `.ipa` du ZIP GitHub.
 
+La première IPA a été produite et vérifiée le 3 novembre 2026 : [compilation réussie et téléchargement](https://github.com/akaRukasu/L-affiche/actions/runs/41680025307). Les artefacts GitHub sont conservés sept jours ; relancer le workflow pour obtenir un nouveau téléchargement après expiration.
+
 **Cette IPA n’a pas de signature Apple de distribution valide et ne peut pas être installée telle quelle sur un iPhone.** Elle devra être signée et provisionnée correctement. Le contrôle vérifie la structure `Payload`, la plateforme iPhoneOS du bundle et la plateforme iOS du binaire arm64. Il rejette une version simulateur, même si son fichier de métadonnées a été renommé.
 
 Pour obtenir directement une IPA signée, utiliser le workflow suivant avec les éléments Apple requis.
