@@ -1,0 +1,82 @@
+[
+  {
+    "id": "orbite",
+    "title": "Les frontières du cosmos",
+    "description": "Une odyssée aux confins de notre système solaire.",
+    "category": "Sciences",
+    "channel": "Sciences · Démo",
+    "artwork": "space",
+    "start": "2026-11-03T12:35:00.000Z",
+    "end": "2026-11-03T13:55:00.000Z"
+  },
+  {
+    "id": "lumiere",
+    "title": "Les lumières de la ville",
+    "description": "Une rencontre inattendue, une nuit qui change tout.",
+    "category": "Films",
+    "channel": "Cinéma · Démo",
+    "artwork": "cinema",
+    "start": "2026-11-03T12:42:00.000Z",
+    "end": "2026-11-03T14:22:00.000Z"
+  },
+  {
+    "id": "terrain",
+    "title": "Le grand match",
+    "description": "Le rendez-vous des passionnés du ballon rond.",
+    "category": "Sport",
+    "channel": "Sport · Démo",
+    "artwork": "sport",
+    "start": "2026-11-03T12:20:00.000Z",
+    "end": "2026-11-03T14:10:00.000Z"
+  },
+  {
+    "id": "memoire",
+    "title": "Les bâtisseurs du temps",
+    "description": "À la découverte des grandes cités de l’Antiquité.",
+    "category": "Histoire",
+    "channel": "Histoire · Démo",
+    "artwork": "history",
+    "start": "2026-11-03T12:50:00.000Z",
+    "end": "2026-11-03T13:50:00.000Z"
+  },
+  {
+    "id": "sauvage",
+    "title": "La vie sauvage",
+    "description": "Au rythme des derniers grands espaces.",
+    "category": "Nature",
+    "channel": "Nature · Démo",
+    "artwork": "nature",
+    "start": "2026-11-03T12:48:00.000Z",
+    "end": "2026-11-03T13:43:00.000Z"
+  },
+  {
+    "id": "dossier",
+    "title": "Un dossier, une vérité",
+    "description": "Une enquête racontée à travers ses archives.",
+    "category": "Enquêtes",
+    "channel": "Enquêtes · Démo",
+    "artwork": "crime",
+    "start": "2026-11-03T13:12:00.000Z",
+    "end": "2026-11-03T14:17:00.000Z"
+  },
+  {
+    "id": "scene",
+    "title": "Ce soir, on rit",
+    "description": "Une scène, des rencontres et beaucoup d’autodérision.",
+    "category": "Humour",
+    "channel": "Spectacle · Démo",
+    "artwork": "comedy",
+    "start": "2026-11-03T13:25:00.000Z",
+    "end": "2026-11-03T14:55:00.000Z"
+  },
+  {
+    "id": "moteur",
+    "title": "Les lignes de la vitesse",
+    "description": "Les artisans et les machines du sport automobile.",
+    "category": "Auto",
+    "channel": "Moteurs · Démo",
+    "artwork": "auto",
+    "start": "2026-11-03T13:42:00.000Z",
+    "end": "2026-11-03T14:34:00.000Z"
+  }
+]

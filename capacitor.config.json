@@ -1,0 +1,11 @@
+{
+  "appId": "fr.alaffiche.app",
+  "appName": "À L'AFFICHE",
+  "webDir": "dist",
+  "backgroundColor": "#000000",
+  "ios": {
+    "contentInset": "never",
+    "preferredContentMode": "mobile",
+    "backgroundColor": "#000000"
+  }
+}

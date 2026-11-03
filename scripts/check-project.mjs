@@ -1,0 +1,16 @@
+import { readFile, access } from 'node:fs/promises';
+import assert from 'node:assert/strict';
+const files = ['package-lock.json', 'dist/index.html', 'dist/sw.js', 'dist/icons/icon-192.png', 'dist/icons/icon-512.png', 'dist/catalogue-exemple.json', 'ios/App/App.xcodeproj/project.pbxproj', 'ios/App/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme', 'ios/App/App/SceneDelegate.swift', 'ios/App/CapApp-SPM/Package.swift', 'ios/App/App/public/index.html'];
+for (const file of files) await access(file);
+const config = JSON.parse(await readFile('capacitor.config.json', 'utf8'));
+assert.equal(config.webDir, 'dist');
+assert.equal(config.server?.url, undefined, 'La version livrée doit charger le catalogue embarqué.');
+const project = await readFile('ios/App/App.xcodeproj/project.pbxproj', 'utf8');
+assert(project.includes(`PRODUCT_BUNDLE_IDENTIFIER = ${config.appId};`));
+assert(project.includes('SceneDelegate.swift in Sources'));
+const native = await readFile('ios/App/App/capacitor.config.json', 'utf8');
+assert.equal(JSON.parse(native).appId, config.appId, 'Exécuter cap sync après un changement de Bundle ID.');
+const icon = await readFile('ios/App/App/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png');
+assert.equal(icon.readUInt32BE(16), 1024); assert.equal(icon.readUInt32BE(20), 1024);
+assert.equal(icon[25], 2, 'L’icône doit être RGB, sans canal alpha.');
+console.log('Structure web et Xcode, synchronisation et icône vérifiées.');
