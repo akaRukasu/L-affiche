@@ -6,7 +6,7 @@
 
 Le projet contient une PWA fonctionnelle et une application iOS hybride : **navigation, onglets et recherche natifs UIKit**, catalogue embarqué dans **Capacitor / WKWebView**. Les cartes, catégories, fiches et favoris sont rendus en HTML/CSS. Il ne s’agit donc pas d’une interface intégralement écrite en SwiftUI.
 
-**La compilation iOS pour simulateur a réussi sur GitHub Actions avec Xcode 26.3 le 3 novembre 2026.** L’artefact compilé est disponible dans [l’exécution macOS](https://github.com/akaRukasu/L-affiche/actions/runs/41661418270). Aucune IPA pour iPhone n’a été signée : son export nécessite vos éléments de signature Apple. Le lancement et le rendu sur simulateur ou iPhone restent à vérifier.
+**La version 0.1.1 compile pour iPhone et se lance sur les simulateurs iOS 26.2 et 27.1.** Voir la [compilation iPhone](https://github.com/akaRukasu/L-affiche/actions/runs/41688472565) et les [tests de lancement](https://github.com/akaRukasu/L-affiche/actions/runs/41688472544). L’IPA fournie est non signée et doit recevoir une signature et un provisionnement valides avant installation sur iPhone.
 
 ## Ce qui fonctionne
 
@@ -74,7 +74,7 @@ Cet artefact contient une application pour le **simulateur sur Mac**. Il n’est
 
 Le workflow **Produire une IPA iPhone non signée** compile une version Release **pour iPhone arm64**, puis crée `A-LAFFICHE-0.1.1-NON-SIGNEE.ipa`. Il se lance automatiquement pour les changements du projet ou manuellement dans Actions. Après succès, télécharger l’artefact **A-LAFFICHE-IPA-NON-SIGNEE-…** et extraire le fichier `.ipa` du ZIP GitHub.
 
-La première IPA a été produite et vérifiée le 3 novembre 2026 : [compilation réussie et téléchargement](https://github.com/akaRukasu/L-affiche/actions/runs/41680025307). Les artefacts GitHub sont conservés sept jours ; relancer le workflow pour obtenir un nouveau téléchargement après expiration.
+L’IPA 0.1.1 a été produite et vérifiée le 3 novembre 2026 : [compilation réussie et téléchargement](https://github.com/akaRukasu/L-affiche/actions/runs/41688472565). Les artefacts GitHub sont conservés sept jours ; relancer le workflow pour obtenir un nouveau téléchargement après expiration.
 
 **Cette IPA n’a pas de signature Apple de distribution valide et ne peut pas être installée telle quelle sur un iPhone.** Elle devra être signée et provisionnée correctement. Le contrôle vérifie la structure `Payload`, la plateforme iPhoneOS du bundle et la plateforme iOS du binaire arm64. Il rejette une version simulateur, même si son fichier de métadonnées a été renommé.
 
@@ -84,7 +84,7 @@ Pour obtenir directement une IPA signée, utiliser le workflow suivant avec les 
 
 Le workflow **Tester le lancement iPhone** compile la version Release, l’installe sur un simulateur compatible et vérifie que son processus reste actif pendant les quinze premières secondes. Il conserve les journaux et une capture lorsqu’elle est disponible. Il couvre iOS 26 et iOS 27 ; le modèle de simulateur dépend des modèles pris en charge par chaque runtime.
 
-Les deux essais de [l’exécution 41684281009](https://github.com/akaRukasu/L-affiche/actions/runs/41684281009) ont réussi : iOS 26.2 sur iPhone 17 Pro simulé et iOS 27.1 sur iPhone Duo simulé. Le rendu du catalogue a aussi été confirmé sur la capture iOS 26.2. Ces essais ne valident pas une IPA resignée sur un appareil réel : un éventuel plantage sur iPhone demande le rapport de cet appareil.
+Les deux essais de la version 0.1.1 dans [l’exécution 41688472544](https://github.com/akaRukasu/L-affiche/actions/runs/41688472544) ont réussi : iOS 26.2 sur iPhone 17 Pro simulé et iOS 27.1 sur iPhone Duo simulé. Le rendu du catalogue a aussi été confirmé sur les captures iOS 26.2 et iOS 27.1. Ces essais ne valident pas une IPA resignée sur un appareil réel : un éventuel plantage sur iPhone demande le rapport de cet appareil.
 
 ## Obtenir une IPA signée
 

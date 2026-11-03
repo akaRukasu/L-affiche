@@ -1,46 +1,39 @@
-# État des vérifications — 3 novembre 2026
+# Vérification — À L’AFFICHE 0.1.1
 
-## Réalisé sous Windows
+## Cause identifiée et correction
 
-- Installation des dépendances avec verrouillage des versions : Capacitor 8.6.0 et Vite 8.3.5 ; Node.js 24.14.0 utilisé localement.
-- Compilation de production de la PWA et génération du cache hors connexion.
-- Création du projet natif avec le modèle officiel Capacitor SPM, puis synchronisation des ressources web dans `ios/App/App/public/`.
-- Contrôle de la structure Xcode, du schéma partagé App, du Bundle ID et de la cohérence de la configuration embarquée.
-- Contrôle de l’icône iOS : PNG RGB sans canal alpha, 1024 × 1024.
-- Quatre tests JavaScript : limites horaires, recherche et favoris, validation de catalogue, échappement des données importées.
-- Quatre tests Python : profil Ad Hoc et App Store, rejet des profils expirés ou incompatibles, profil de développement et App ID générique.
-- Analyse de syntaxe YAML des deux workflows, XML des storyboards et du schéma, plist iOS et scripts shell.
+Le rapport de fermeture sur iPhone indique un arrêt par `DYLD` avant le lancement du code de l’application. La bibliothèque `@rpath/Capacitor.framework/Capacitor` est présente, mais sa signature est rejetée (`code signature invalid`). Ce n’est donc pas une absence du fichier dans le ZIP.
 
-Dans Chrome, avec une largeur mobile de 393 px : recherche sans accents, ouverture d’une fiche, ajout aux favoris, changement d’onglet et import d’un catalogue de huit entrées. Un titre contenant du HTML est affiché comme du texte, sans exécution. Vérification d’absence de débordement horizontal sur mobile et à 1440 px ; activation du mode de grands caractères.
+La version 0.1.1 remplace les frameworks binaires dynamiques de Swift Package Manager par les mêmes sources Capacitor 8.6.0 intégrées statiquement avec CocoaPods. Le code UIKit, le catalogue et le Bundle ID sont conservés. Les ressources du pont JavaScript sont copiées dans le bundle principal. Le projet s’ouvre maintenant avec `ios/App/App.xcworkspace` après `npm run ios:sync` sur Mac.
 
-Le test hors connexion a été effectué en arrêtant réellement le serveur local après activation du service worker, puis en rechargeant la page. Le catalogue et ses cinq entrées initialement en cours se chargent depuis le cache, tandis qu’une requête non mise en cache échoue. Ce test a permis de corriger la prise en compte de l’en-tête `Vary: Origin` pour les modules JavaScript préchargés dans le cache.
+Le correctif enlève la nécessité de signer séparément les frameworks Capacitor et Cordova. **La signature et le provisionnement valides de l’application principale restent nécessaires avant installation sur un iPhone.** Le rapport fourni n’a pas été ajouté au dépôt ; aucun identifiant propre à l’appareil n’est publié.
 
-L’audit des dépendances de production ne signale aucune vulnérabilité au moment du contrôle. L’audit complet remonte quatre alertes modérées dans la chaîne de dépendances de développement du CLI Capacitor (`rimraf`, `glob`, `minimatch`). Elles restent à suivre lors des mises à jour du CLI ; les versions n’ont pas été rétrogradées ou forcées vers des majeures incompatibles pour masquer les alertes.
+## IPA iPhone contrôlée
 
-## Compilation macOS validée
+La [compilation iPhone 41688472565](https://github.com/akaRukasu/L-affiche/actions/runs/41688472565) a réussi sur macOS avec Xcode 26.3, en Release pour `generic/platform=iOS`, commit `b125afc58c659ba427e5ff3ad25a2caa20cae173`.
 
-Le workflow `ios-check.yml` a réussi sur macOS avec **Xcode 26.3**, sans certificat, le **3 novembre 2026** : [exécution 41661418270](https://github.com/akaRukasu/L-affiche/actions/runs/41661418270), commit `83b3f4fabba58b680460ee28b70087322fb1fa2a`. La préparation web, les huit tests, la résolution des dépendances Swift Package Manager, la compilation Swift et des ressources Xcode ainsi que l’envoi de l’artefact ont réussi. Le journal Xcode confirme `BUILD SUCCEEDED`.
+Le fichier `A-LAFFICHE-0.1.1-NON-SIGNEE.ipa` téléchargé a été vérifié à nouveau localement :
 
-L’artefact `A-LAFFICHE-simulateur-1` a été téléchargé et inspecté. Son ZIP contient `App.app`, son exécutable et son `Info.plist`, avec le Bundle ID `fr.alaffiche.app`, la plateforme `iPhoneSimulator`, le minimum iOS 15.4 et Xcode 26.3. Ce fichier est destiné au simulateur sur Mac ; ce n’est pas une IPA pour iPhone. La durée de rétention configurée sur GitHub est de sept jours.
+- structure `Payload/App.app` et exécutable Mach-O arm64 ciblant iOS ;
+- Bundle ID `fr.alaffiche.app`, version 0.1.1, minimum iOS 15.4 ;
+- aucun framework embarqué dans `App.app/Frameworks` ;
+- aucune dépendance dynamique à Capacitor ou Cordova dans les commandes de chargement du binaire ;
+- ressource `native-bridge.js` présente dans le bundle principal ;
+- aucun profil ni signature Apple de distribution valide fourni dans l’artefact non signé.
 
-## IPA iPhone non signée produite
+Le contrôleur d’IPA rejette désormais une réintroduction des dépendances dynamiques ou l’absence du pont JavaScript. Quatre tests JavaScript et dix tests Python passent.
 
-Le workflow `ios-unsigned-ipa.yml` a réussi sur macOS avec Xcode 26.3 le 3 novembre 2026 : [exécution 41680025307](https://github.com/akaRukasu/L-affiche/actions/runs/41680025307), commit `8b464680a52fef59f39041322dc27b81ae863da9`. Il compile séparément en Release pour un iPhone réel (`generic/platform=iOS`) et crée `A-LAFFICHE-NON-SIGNEE.ipa`.
+## Lancement et affichage vérifiés
 
-L’IPA a été téléchargée et contrôlée de nouveau localement : structure `Payload/App.app`, Bundle ID `fr.alaffiche.app`, métadonnées iPhoneOS, exécutable Mach-O arm64 ciblant iOS et minimum iOS 15.4. Aucun profil de provisionnement ni signature Apple de distribution valide n’est inclus. **Ce fichier nécessite une signature et un provisionnement valides avant installation sur iPhone.**
+Les deux essais Release de [l’exécution 41688472544](https://github.com/akaRukasu/L-affiche/actions/runs/41688472544) ont réussi :
 
-Quatre tests supplémentaires vérifient le contrôle d’IPA, dont le rejet d’un binaire simulateur même avec des métadonnées modifiées. Le workflow passe maintenant quatre tests JavaScript et huit tests Python.
+- iOS 26.2 sur iPhone 17 Pro simulé, avec Xcode 26.3 ;
+- iOS 27.1 sur iPhone Duo simulé, avec Xcode 27.1.
 
-## Signature et rendu restant à vérifier
+Le processus reste actif après quinze secondes et les captures montrent le catalogue avec les commandes UIKit sur les deux versions. Le modèle iPhone 13 Pro n’est pas proposé par les runtimes utilisés ; ces essais ne remplacent donc pas la vérification sur cet appareil réel après signature avec l’outil choisi par son propriétaire.
 
-Un test de lancement réel sur simulateur a été ajouté : [exécution 41684281009](https://github.com/akaRukasu/L-affiche/actions/runs/41684281009), commit `962c48f286f0db0883cfc6485ed21e66b2f84e9a`. La version Release reste active après quinze secondes sur iOS 26.2 (iPhone 17 Pro simulé, Xcode 26.3) et iOS 27.1 (iPhone Duo simulé, Xcode 27.1). La capture iOS 26.2 montre le catalogue et les contrôles natifs. Sur iOS 27.1, la capture n’a pas été obtenue car le modèle de simulateur expose deux écrans ; le contrôle du processus a réussi. Aucun rapport de crash de l’application n’a été produit pendant ces tests.
+La configuration Debug de la cible App laisse CocoaPods installer son fichier de configuration. Le drapeau `CAPACITOR_DEBUG` reste défini au niveau du projet. Cela évite un contrôle de Podfile.lock exécuté sans les chemins de dépendances. La [compilation Debug 41690047385](https://github.com/akaRukasu/L-affiche/actions/runs/41690047385) a réussi après cet ajustement.
 
-Ces essais ne reproduisent pas une fermeture immédiate sur un iPhone réel après signature par un outil tiers. Ils ne permettent pas d’en déduire la cause. Le rapport de plantage de l’appareil est nécessaire pour poursuivre ce diagnostic ; aucun correctif de démarrage natif n’est revendiqué sur la seule base de ces résultats.
+## Limites du produit
 
-Les tests de profil utilisent des données fictives. Aucun certificat, aucune clé privée ni aucun profil réel n’a été fourni. L’import dans Trousseaux d’accès, l’archive signée pour iPhone, l’export signé et les contrôles associés restent à valider dans le workflow signé avec vos secrets Apple. Le certificat est comparé aux empreintes des certificats du profil avant l’archive ; les vérifications de signature de l’IPA sont prévues après export, sans garantie d’acceptation par Apple ou l’appareil.
-
-La conformité visuelle native demande encore un essai sur simulateur puis sur iPhone : navigation à grands titres, changement d’onglets, recherche et clavier, import JSON, rotation, VoiceOver, grandes tailles de texte et persistance après relance.
-
-## Provenance
-
-La conversation source décrit la PWA mais son ZIP n’était pas disponible. La structure de ce projet reconstruit a été inspectée ; celle de l’archive d’origine ne peut pas être certifiée. Les images de catalogue sont des illustrations CSS et les programmes sont fictifs. Aucun fournisseur EPG réel n’est configuré.
+Le catalogue reste une démonstration avec huit programmes fictifs et un import JSON. Aucun EPG actualisé ni flux TV n’est connecté. La PWA d’origine a été reconstruite à partir de sa description, car son archive historique n’était pas accessible. Les tests ne constituent ni une distribution Apple signée ni une validation App Store.
