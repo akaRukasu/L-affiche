@@ -17,9 +17,13 @@ Le test hors connexion a été effectué en arrêtant réellement le serveur loc
 
 L’audit des dépendances de production ne signale aucune vulnérabilité au moment du contrôle. L’audit complet remonte quatre alertes modérées dans la chaîne de dépendances de développement du CLI Capacitor (`rimraf`, `glob`, `minimatch`). Elles restent à suivre lors des mises à jour du CLI ; les versions n’ont pas été rétrogradées ou forcées vers des majeures incompatibles pour masquer les alertes.
 
-## À exécuter sur macOS
+## Compilation macOS validée
 
-Le code Swift et les ressources Xcode **n’ont pas été compilés ici**. Les contrôles de fichiers ne valident pas le compilateur Swift, les dépendances SPM distantes ou le rendu UIKit réel. Le workflow `ios-check.yml` est prévu pour cette validation sur Xcode 26.3, sans certificat. Aucun workflow n’a été exécuté sur GitHub pendant cette préparation.
+Le workflow `ios-check.yml` a réussi sur macOS avec **Xcode 26.3**, sans certificat, le **3 novembre 2026** : [exécution 41661418270](https://github.com/akaRukasu/L-affiche/actions/runs/41661418270), commit `83b3f4fabba58b680460ee28b70087322fb1fa2a`. La préparation web, les huit tests, la résolution des dépendances Swift Package Manager, la compilation Swift et des ressources Xcode ainsi que l’envoi de l’artefact ont réussi. Le journal Xcode confirme `BUILD SUCCEEDED`.
+
+L’artefact `A-LAFFICHE-simulateur-1` a été téléchargé et inspecté. Son ZIP contient `App.app`, son exécutable et son `Info.plist`, avec le Bundle ID `fr.alaffiche.app`, la plateforme `iPhoneSimulator`, le minimum iOS 15.4 et Xcode 26.3. Ce fichier est destiné au simulateur sur Mac ; ce n’est pas une IPA pour iPhone. La durée de rétention configurée sur GitHub est de sept jours.
+
+## Signature et rendu restant à vérifier
 
 Les tests de profil utilisent des données fictives. Aucun certificat, aucune clé privée ni aucun profil réel n’a été fourni. L’import dans Trousseaux d’accès, l’archive pour iPhone, l’export et la vérification d’une IPA restent à valider dans le workflow signé avec vos secrets Apple. Le certificat est comparé aux empreintes des certificats du profil avant l’archive ; les vérifications de signature de l’IPA sont prévues après export, sans garantie d’acceptation par Apple ou l’appareil.
 

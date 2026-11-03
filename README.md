@@ -4,7 +4,7 @@
 
 Le projet contient une PWA fonctionnelle et une application iOS hybride : **navigation, onglets et recherche natifs UIKit**, catalogue embarqué dans **Capacitor / WKWebView**. Les cartes, catégories, fiches et favoris sont rendus en HTML/CSS. Il ne s’agit donc pas d’une interface intégralement écrite en SwiftUI.
 
-**Aucune IPA n’a été compilée ou signée dans ce livrable.** Le travail a été préparé sous Windows. Les workflows macOS sont fournis et doivent être exécutés dans votre dépôt GitHub pour valider Xcode et, avec vos éléments de signature, exporter l’IPA.
+**La compilation iOS pour simulateur a réussi sur GitHub Actions avec Xcode 26.3 le 3 novembre 2026.** L’artefact compilé est disponible dans [l’exécution macOS](https://github.com/akaRukasu/L-affiche/actions/runs/41661418270). Aucune IPA pour iPhone n’a été signée : son export nécessite vos éléments de signature Apple. Le lancement et le rendu sur simulateur ou iPhone restent à vérifier.
 
 ## Ce qui fonctionne
 
@@ -66,7 +66,7 @@ Sous PowerShell, définir d’abord `$env:IOS_BUNDLE_ID = 'fr.votreorganisation.
 3. Dans **Actions**, lancer **Vérifier iOS sans certificat**. Le workflow se lance également sur une PR et sur un push dans `main`.
 4. Après succès, télécharger **A-LAFFICHE-simulateur-…** dans les artefacts de l’exécution.
 
-Cet artefact contient une application pour le **simulateur sur Mac**. Il n’est pas installable sur un iPhone et ne contient pas d’IPA de distribution. Le premier succès macOS sera la validation effective de la compilation Swift/Xcode ; les contrôles faits sous Windows ne la remplacent pas.
+Cet artefact contient une application pour le **simulateur sur Mac**. Il n’est pas installable sur un iPhone et ne contient pas d’IPA de distribution. La compilation Swift/Xcode et la génération de cet artefact ont été validées par l’exécution macOS ci-dessus.
 
 ## Obtenir une IPA signée
 
@@ -115,4 +115,4 @@ Les horaires de démonstration sont recalculés au lancement puis progressent av
 
 La navigation iOS native et le catalogue web forment une application hybride. Les fiches en panneau sont des composants web ; les gestes système, VoiceOver, les tailles de texte et le comportement du clavier doivent encore être vérifiés sur simulateur et iPhone. Une publication App Store nécessite aussi des données utiles, les informations de confidentialité et une revue de conformité. La présence de Capacitor et de commandes natives ne garantit pas l’acceptation Apple. [Critère Apple 4.2](https://developer.apple.com/app-store/review/guidelines/#minimum-functionality).
 
-La compilation et les tests locaux sont détaillés dans [docs/VERIFICATION.md](docs/VERIFICATION.md). Aucun dépôt distant n’a été créé ou modifié par cette préparation.
+La compilation et les contrôles sont détaillés dans [docs/VERIFICATION.md](docs/VERIFICATION.md). Les sources et les deux workflows sont publiés dans [akaRukasu/L-affiche](https://github.com/akaRukasu/L-affiche).
