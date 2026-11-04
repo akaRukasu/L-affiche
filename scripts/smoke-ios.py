@@ -62,6 +62,18 @@ try:
     pid = int(match.group(1))
     summary['pid'] = pid
     time.sleep(15)
+    # Validate the first automatic France-guide download inside WKWebView, not just process survival.
+    deadline = time.time() + 100
+    guide_match = None
+    while time.time() < deadline:
+        logs = '\n'.join(p.read_text(errors='replace') for p in [output / 'app.stdout.log', output / 'app.stderr.log'] if p.exists())
+        guide_match = re.search(r'ALAFFICHE_GUIDE_READY channels=(\d+) programmes=(\d+) sports=(\d+)', logs)
+        if guide_match:
+            break
+        time.sleep(1)
+    summary['guide_loaded'] = guide_match is not None
+    if guide_match:
+        summary['guide_channels'], summary['guide_programmes'], summary['guide_sports'] = map(int, guide_match.groups())
     state = run('ps', '-p', str(pid), '-o', 'stat=', '-o', 'command=', check=False)
     summary['process'] = state.stdout.strip()
     summary['survived_launch'] = state.returncode == 0 and not state.stdout.lstrip().startswith('Z') and '/App.app/App' in state.stdout
@@ -70,6 +82,8 @@ try:
         simctl('io', udid, 'screenshot', '--display=1', str(output / 'startup.png'), check=False)
     if not summary['survived_launch']:
         raise RuntimeError('L’application a quitté dans les 15 secondes suivant son lancement.')
+    if not guide_match or summary['guide_channels'] <= 30 or summary['guide_sports'] == 0:
+        raise RuntimeError('Le guide France complet et les programmes sportifs ne se sont pas chargés automatiquement.')
 finally:
     log = simctl('spawn', udid, 'log', 'show', '--last', '3m', '--style', 'compact',
                  '--predicate', 'process == "App"', check=False, timeout=90)

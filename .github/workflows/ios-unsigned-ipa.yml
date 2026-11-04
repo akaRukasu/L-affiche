@@ -51,8 +51,8 @@ jobs:
         run: |
           mkdir -p build/unsigned/Payload
           ditto build/A-LAFFICHE-non-signee.xcarchive/Products/Applications/App.app build/unsigned/Payload/App.app
-          ditto -c -k --norsrc --keepParent build/unsigned/Payload build/A-LAFFICHE-0.1.1-NON-SIGNEE.ipa
-          python3 scripts/verify-unsigned-ipa.py build/A-LAFFICHE-0.1.1-NON-SIGNEE.ipa
+          ditto -c -k --norsrc --keepParent build/unsigned/Payload build/A-LAFFICHE-0.2.0-NON-SIGNEE.ipa
+          python3 scripts/verify-unsigned-ipa.py build/A-LAFFICHE-0.2.0-NON-SIGNEE.ipa
           printf '%s\n' \
             'À L’AFFICHE — IPA iPhone NON SIGNÉE' \
             'Ce fichier contient une application compilée pour iPhone arm64.' \
@@ -60,7 +60,7 @@ jobs:
             'Une signature et un provisionnement valides sont nécessaires avant installation.' \
             'Pour un export signé : utiliser le workflow Produire une IPA signée.' \
             > build/LIRE-AVANT-INSTALLATION.txt
-          shasum -a 256 build/A-LAFFICHE-0.1.1-NON-SIGNEE.ipa > build/SHA256-IPA.txt
+          shasum -a 256 build/A-LAFFICHE-0.2.0-NON-SIGNEE.ipa > build/SHA256-IPA.txt
           printf '%s\n' \
             '## IPA iPhone non signée produite' \
             'Télécharger l’artefact A-LAFFICHE-IPA-NON-SIGNEE ci-dessous.' \
@@ -70,7 +70,7 @@ jobs:
         with:
           name: A-LAFFICHE-IPA-NON-SIGNEE-${{ github.run_number }}
           path: |
-            build/A-LAFFICHE-0.1.1-NON-SIGNEE.ipa
+            build/A-LAFFICHE-0.2.0-NON-SIGNEE.ipa
             build/LIRE-AVANT-INSTALLATION.txt
             build/SHA256-IPA.txt
           if-no-files-found: error

@@ -1,8 +1,10 @@
 # À L’AFFICHE — iOS et PWA
 
+**Version 0.2.0 : guide TV automatique.** Dès la première ouverture, l’application télécharge le guide France complet de XML TV Fr (401 chaînes référencées lors du contrôle). Aucun fichier à importer, aucune clé à saisir. L’onglet Sport affiche matchs et événements avec leurs précisions, horaires et chaînes, avec une recherche par équipe ou compétition. Actualisation toutes les six heures lorsque l’application est ouverte, au retour dans l’application si nécessaire et au retour de la connexion ; dernière copie conservée localement. Les programmes et images proviennent de la source, les dates ne sont jamais inventées. Voir [la source et le cache](docs/GUIDE-TV.md).
+
 **Version 0.1.1 : runtime Capacitor/Cordova lié statiquement.** Cette version retire les deux frameworks dynamiques à signer séparément, après identification d’un rejet de signature de `Capacitor.framework` au démarrage. Une signature valide de l’application et un provisionnement adapté restent indispensables sur iPhone.
 
-**Reconstruction du 3 novembre 2026.** L’archive `a-laffiche-pwa.zip` de la conversation précédente n’était pas accessible. Ce projet reprend sa description ; ce n’est pas une conversion vérifiée de ses fichiers d’origine. Le catalogue fourni contient huit programmes fictifs et ne constitue pas un guide TV actualisé.
+**Reconstruction du 3 novembre 2026.** L’archive `a-laffiche-pwa.zip` de la conversation précédente n’était pas accessible. Ce projet reprend sa description ; ce n’est pas une conversion vérifiée de ses fichiers d’origine. Depuis la version 0.2.0, le guide est récupéré automatiquement auprès de XML TV Fr.
 
 Le projet contient une PWA fonctionnelle et une application iOS hybride : **navigation, onglets et recherche natifs UIKit**, catalogue embarqué dans **Capacitor / WKWebView**. Les cartes, catégories, fiches et favoris sont rendus en HTML/CSS. Il ne s’agit donc pas d’une interface intégralement écrite en SwiftUI.
 
@@ -11,12 +13,12 @@ Le projet contient une PWA fonctionnelle et une application iOS hybride : **navi
 ## Ce qui fonctionne
 
 - Catalogue cinéma sombre, adapté au mobile et au bureau, avec une icône originale.
-- En direct, Bientôt (prochaine heure), Explorer et Ma sélection.
+- En direct, Bientôt (prochaine heure), Sport, Explorer et Ma sélection.
 - Recherche par titre, chaîne et genre ; catégories ; fiches détaillées.
-- Favoris conservés localement, import JSON validé et retour au catalogue de démonstration.
+- Favoris conservés localement, guide XMLTV téléchargé automatiquement et copie des horaires hors connexion.
 - PWA installable sur un hébergement HTTPS ; cache hors connexion après une première ouverture réussie.
 - Navigation clavier (Tabulation, Entrée, flèches) pour PC et navigateurs TV compatibles. Aucun projet tvOS n’est inclus ; les télécommandes et navigateurs TV restent à tester sur appareil.
-- Sur iOS : `UITabBarController`, `UINavigationController`, `UISearchController`, SF Symbols, zones de sécurité et adaptation de la taille du texte. Une seule WKWebView est partagée entre les quatre onglets.
+- Sur iOS : `UITabBarController`, `UINavigationController`, `UISearchController`, SF Symbols, zones de sécurité et adaptation de la taille du texte. Une seule WKWebView est partagée entre les cinq onglets.
 
 Les données locales de la PWA Safari et celles de l’application iOS sont séparées. Il n’y a ni compte ni synchronisation entre appareils. Les favoris sont stockés localement et peuvent disparaître en cas de suppression de l’application ou de ses données. Aucun flux vidéo n’est diffusé.
 
@@ -52,7 +54,7 @@ npm run ios:open
 
 Installer CocoaPods sur Mac si nécessaire. `npm run ios:sync` exécute `pod install`, qui prépare les dépendances natives. Ouvrir ensuite **`ios/App/App.xcworkspace`**, schéma **App**, pour inclure ces dépendances. Le projet iOS est déjà créé : ne pas lancer `cap add ios` à nouveau et ne pas supprimer le dossier `ios/`, qui contient la navigation personnalisée.
 
-Choisir d’abord un simulateur pour vérifier le lancement, les quatre onglets, la recherche, l’import et les favoris. Pour un iPhone réel, sélectionner votre équipe dans « Signing & Capabilities » et un Bundle ID disponible. Pour modifier l’identifiant dans les fichiers :
+Choisir d’abord un simulateur pour vérifier le lancement, les cinq onglets, la recherche, le chargement automatique du guide et les favoris. Pour un iPhone réel, sélectionner votre équipe dans « Signing & Capabilities » et un Bundle ID disponible. Pour modifier l’identifiant dans les fichiers :
 
 ```sh
 IOS_BUNDLE_ID=fr.votreorganisation.alaffiche node scripts/configure-ios.mjs
@@ -72,7 +74,7 @@ Cet artefact contient une application pour le **simulateur sur Mac**. Il n’est
 
 ## Télécharger une IPA iPhone non signée
 
-Le workflow **Produire une IPA iPhone non signée** compile une version Release **pour iPhone arm64**, puis crée `A-LAFFICHE-0.1.1-NON-SIGNEE.ipa`. Il se lance automatiquement pour les changements du projet ou manuellement dans Actions. Après succès, télécharger l’artefact **A-LAFFICHE-IPA-NON-SIGNEE-…** et extraire le fichier `.ipa` du ZIP GitHub.
+Le workflow **Produire une IPA iPhone non signée** compile une version Release **pour iPhone arm64**, puis crée `A-LAFFICHE-0.2.0-NON-SIGNEE.ipa`. Il se lance automatiquement pour les changements du projet ou manuellement dans Actions. Après succès, télécharger l’artefact **A-LAFFICHE-IPA-NON-SIGNEE-…** et extraire le fichier `.ipa` du ZIP GitHub.
 
 L’IPA 0.1.1 a été produite et vérifiée le 3 novembre 2026 : [compilation réussie et téléchargement](https://github.com/akaRukasu/L-affiche/actions/runs/41688472565). Les artefacts GitHub sont conservés sept jours ; relancer le workflow pour obtenir un nouveau téléchargement après expiration.
 
@@ -119,7 +121,7 @@ Après succès, ouvrir l’exécution puis **Artifacts → A-LAFFICHE-IPA-…**.
 assets/AppIcon-1024.png             Icône RGB opaque 1024 × 1024
 capacitor.config.json              Bundle ID et dossier web embarqué
 src/                               Catalogue, interface et logique partagée
-public/                            Icônes PWA, manifest, exemple JSON
+public/                            Icônes PWA et manifest
 dist/                              Version web compilée, régénérable
 ios/App/App.xcodeproj/              Projet Xcode et schéma partagé App
 ios/App/App/SceneDelegate.swift     Navigation UIKit + connexion à la WKWebView
@@ -132,7 +134,7 @@ docs/                              Signature, validation et provenance de l’ic
 
 ## Limites et suite du projet
 
-Les horaires de démonstration sont recalculés au lancement puis progressent avec l’heure réelle. L’import utilise des dates ISO 8601 avec fuseau ; le fichier d’exemple est daté du 3 novembre 2026 et peut donc ne rien afficher dans « En direct ». Utiliser « Explorer » ou importer des horaires actuels. Un fournisseur EPG fiable et ses droits d’utilisation restent à connecter.
+Le guide public XML TV Fr est une source externe mise à jour quotidiennement ; sa disponibilité et son exactitude ne sont pas garanties par cette application. La version courante charge les 401 chaînes référencées dans le fichier France, avec 380 chaînes disposant d’horaires lors du test. Le catalogue dépend de la couverture de la source et ne garantit pas toutes les chaînes existantes. Une première connexion est indispensable. Une copie périmée reste identifiée et ne fournit jamais de faux programmes « En direct ». Les horaires sont affichés dans le fuseau de l’appareil. Les contenus audiovisuels ne sont pas diffusés.
 
 La navigation iOS native et le catalogue web forment une application hybride. Les fiches en panneau sont des composants web ; les gestes système, VoiceOver, les tailles de texte et le comportement du clavier doivent encore être vérifiés sur simulateur et iPhone. Une publication App Store nécessite aussi des données utiles, les informations de confidentialité et une revue de conformité. La présence de Capacitor et de commandes natives ne garantit pas l’acceptation Apple. [Critère Apple 4.2](https://developer.apple.com/app-store/review/guidelines/#minimum-functionality).
 

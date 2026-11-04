@@ -1,4 +1,14 @@
-# Vérification — À L’AFFICHE 0.1.1
+# Vérification — À L’AFFICHE 0.2.0
+
+## Guide automatique — 4 novembre 2026
+
+- Onze tests JavaScript et dix tests Python réussis.
+- Réponse HTTP 200 de la source XML TV Fr, avec accès navigateur autorisé.
+- Premier chargement réel dans Chrome mobile simulé : 401 chaînes référencées, 380 avec horaires et 380 programmes en cours, guide complet dans un Worker et copie IndexedDB. Aucun champ d’import.
+- Coupure réseau : les horaires restent affichés, l’interface indique la copie enregistrée, le cache est conservé.
+- Compilation iPhone et lancement natif : résultats GitHub Actions à ajouter après exécution.
+
+## Historique : correction du démarrage en 0.1.1
 
 ## Cause identifiée et correction
 
@@ -36,4 +46,4 @@ La configuration Debug de la cible App laisse CocoaPods installer son fichier de
 
 ## Limites du produit
 
-Le catalogue reste une démonstration avec huit programmes fictifs et un import JSON. Aucun EPG actualisé ni flux TV n’est connecté. La PWA d’origine a été reconstruite à partir de sa description, car son archive historique n’était pas accessible. Les tests ne constituent ni une distribution Apple signée ni une validation App Store.
+Depuis la version 0.2.0, le guide EPG est chargé automatiquement depuis XML TV Fr. Aucun flux vidéo n’est diffusé. La PWA d’origine a été reconstruite à partir de sa description, car son archive historique n’était pas accessible. Les tests ne constituent ni une distribution Apple signée ni une validation App Store.

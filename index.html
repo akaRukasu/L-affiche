@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#000000" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="description" content="À L'AFFICHE, votre sélection TV. Prototype avec un catalogue de démonstration." />
+    <meta name="description" content="À L'AFFICHE, les programmes des chaînes françaises, chargés et actualisés automatiquement." />
     <link rel="manifest" href="./manifest.webmanifest" />
     <link rel="apple-touch-icon" href="./icons/icon-192.png" />
     <title>À L'AFFICHE</title>
@@ -18,31 +18,25 @@
       <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Titre, chaîne, genre" aria-label="Rechercher un programme" /></label>
     </header>
     <main id="main" tabindex="-1">
-      <div class="intro"><span class="demo-pill">CATALOGUE DÉMO</span><button id="import-open" class="text-button">Importer un catalogue</button></div>
-      <p class="demo-note">Programmes fictifs, horaires relatifs à l’ouverture. Aucun direct TV connecté.</p>
+      <div class="intro"><span id="guide-status" class="guide-pill" role="status">CHARGEMENT DU GUIDE</span><button id="refresh-guide" class="text-button">Actualiser</button></div>
+      <p id="guide-note" class="guide-note">Les programmes se chargent automatiquement.</p>
+      <p class="source-note">Source : <a href="https://xmltvfr.fr/" target="_blank" rel="noopener noreferrer">XML TV Fr</a></p>
       <div id="categories" class="categories" role="group" aria-label="Catégories"></div>
+      <div id="sport-filters" class="sport-filters" role="group" aria-label="Programmes sportifs" hidden><button data-sport-mode="events" aria-pressed="true">Matchs et événements</button><button data-sport-mode="all" aria-pressed="false">Tout le sport</button></div>
       <section id="hero" aria-label="À la une"></section>
       <div class="section-heading"><h2 id="section-title">À découvrir maintenant</h2><span id="result-count" role="status"></span></div>
       <section id="programs" class="programs" aria-label="Programmes"></section>
+      <button id="load-more" class="secondary-button" hidden>Afficher davantage de programmes</button>
       <p id="empty" class="empty" hidden>Aucun programme ici pour le moment.</p>
     </main>
     <nav class="web-tabs" aria-label="Navigation principale">
       <button data-tab="live" aria-current="page"><span aria-hidden="true">◉</span>En direct</button>
       <button data-tab="soon"><span aria-hidden="true">◷</span>Bientôt</button>
+      <button data-tab="sport"><span aria-hidden="true">⚽</span>Sport</button>
       <button data-tab="explore"><span aria-hidden="true">⌕</span>Explorer</button>
       <button data-tab="saved"><span aria-hidden="true">♡</span>Sélection</button>
     </nav>
     <dialog id="detail"><div id="detail-content"></div></dialog>
-    <dialog id="import-dialog">
-      <div class="sheet-handle" aria-hidden="true"></div>
-      <button class="close-button" id="import-close" aria-label="Fermer">×</button>
-      <h2>Votre catalogue</h2>
-      <p>Importez un fichier JSON de programmes avec des horaires datés. Le catalogue reste sur cet appareil.</p>
-      <a href="./catalogue-exemple.json" download class="text-button">Télécharger un exemple</a>
-      <label class="import-label">Choisir un fichier JSON<input id="import-file" type="file" accept=".json,application/json" /></label>
-      <button id="reset-demo" class="secondary-button">Revenir à la démonstration</button>
-      <p id="import-error" role="alert"></p>
-    </dialog>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

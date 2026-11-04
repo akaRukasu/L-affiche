@@ -35,6 +35,7 @@ final class CatalogueTabController: UITabBarController {
         let sections: [(String, String, String, String)] = [
             ("live", "En direct", "En direct", "play.tv"),
             ("soon", "Bientôt", "Bientôt", "clock"),
+            ("sport", "Sport", "Sport", "sportscourt"),
             ("explore", "Explorer", "Explorer", "magnifyingglass"),
             ("saved", "Ma sélection", "Sélection", "heart")
         ]
@@ -106,6 +107,12 @@ private final class ReadyMessageHandler: NSObject, WKScriptMessageHandler {
     weak var owner: CatalogueBridgeController?
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         guard message.frameInfo.isMainFrame, message.frameInfo.securityOrigin.protocol == "capacitor", message.frameInfo.securityOrigin.host == "localhost" else { return }
+        if let data = message.body as? [String: Any], data["event"] as? String == "guide",
+           let channels = data["channels"] as? Int, let programmes = data["programmes"] as? Int,
+           let sports = data["sports"] as? Int {
+            NSLog("ALAFFICHE_GUIDE_READY channels=%ld programmes=%ld sports=%ld", channels, programmes, sports)
+            return
+        }
         owner?.pageReady()
     }
 }
@@ -124,6 +131,7 @@ final class CatalogueBridgeController: CAPBridgeViewController {
         (() => {
           const notify = () => window.webkit.messageHandlers.alafficheReady.postMessage('ready');
           window.addEventListener('alaffiche:ready', notify);
+          window.addEventListener('alaffiche:guide', event => window.webkit.messageHandlers.alafficheReady.postMessage({ event: 'guide', ...event.detail }));
           if (window.ALAfficheNative) notify();
         })();
         """
@@ -132,12 +140,17 @@ final class CatalogueBridgeController: CAPBridgeViewController {
         webView?.isOpaque = false
         webView?.backgroundColor = .black
         NotificationCenter.default.addObserver(self, selector: #selector(textSizeChanged), name: UIContentSizeCategory.didChangeNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refreshGuide), name: UIApplication.didBecomeActiveNotification, object: nil)
     }
 
     func pageReady() { ready = true; sendState() }
     func activate(section: String, query: String) { self.section = section; self.query = query; sendState() }
     func search(_ query: String) { self.query = query; sendQuery() }
     @objc private func textSizeChanged() { sendQuery() }
+    @objc private func refreshGuide() {
+        guard ready else { return }
+        webView?.evaluateJavaScript("window.ALAfficheNative?.refreshGuide();", completionHandler: nil)
+    }
 
     private func arguments() -> String? {
         let size = UIFont.preferredFont(forTextStyle: .body).pointSize

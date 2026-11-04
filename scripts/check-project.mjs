@@ -1,6 +1,6 @@
 import { readFile, access } from 'node:fs/promises';
 import assert from 'node:assert/strict';
-const files = ['package-lock.json', 'dist/index.html', 'dist/sw.js', 'dist/icons/icon-192.png', 'dist/icons/icon-512.png', 'dist/catalogue-exemple.json', 'ios/App/App.xcodeproj/project.pbxproj', 'ios/App/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme', 'ios/App/App/SceneDelegate.swift', 'ios/App/Podfile', 'ios/App/App.xcworkspace/contents.xcworkspacedata', 'ios/App/App/public/index.html'];
+const files = ['package-lock.json', 'dist/index.html', 'dist/sw.js', 'dist/icons/icon-192.png', 'dist/icons/icon-512.png', 'ios/App/App.xcodeproj/project.pbxproj', 'ios/App/App.xcodeproj/xcshareddata/xcschemes/App.xcscheme', 'ios/App/App/SceneDelegate.swift', 'ios/App/Podfile', 'ios/App/App.xcworkspace/contents.xcworkspacedata', 'ios/App/App/public/index.html'];
 for (const file of files) await access(file);
 const config = JSON.parse(await readFile('capacitor.config.json', 'utf8'));
 assert.equal(config.webDir, 'dist');
