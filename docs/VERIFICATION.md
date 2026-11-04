@@ -5,8 +5,11 @@
 - Onze tests JavaScript et dix tests Python réussis.
 - Réponse HTTP 200 de la source XML TV Fr, avec accès navigateur autorisé.
 - Premier chargement réel dans Chrome mobile simulé : 401 chaînes référencées, 380 avec horaires et 380 programmes en cours, guide complet dans un Worker et copie IndexedDB. Aucun champ d’import.
-- Coupure réseau : les horaires restent affichés, l’interface indique la copie enregistrée, le cache est conservé.
-- Compilation iPhone et lancement natif : résultats GitHub Actions à ajouter après exécution.
+- Coupure réseau : les horaires restent affichés, l’interface indique la copie enregistrée, le cache est conservé. Réouverture de la PWA hors connexion : les 691 événements sportifs restaient consultables.
+- Sport : recherche « Ligue des champions » donnant 35 diffusions avec équipes/événements, horaires et chaînes. Passage de 80 à 160 cartes par « Afficher davantage » vérifié ; aucun plafond de 80 sur le catalogue.
+- [Compilation iPhone arm64 Release 41850227333](https://github.com/akaRukasu/L-affiche/actions/runs/41850227333) réussie ; IPA 0.2.0 build 4.1 contrôlée localement, runtime statique, source France complète embarquée dans le code et aucun exemple de catalogue dans le bundle.
+- [Compilation Debug 41850227383](https://github.com/akaRukasu/L-affiche/actions/runs/41850227383) réussie.
+- [Lancement natif 41850227542](https://github.com/akaRukasu/L-affiche/actions/runs/41850227542) réussi sous iOS 26.2 (iPhone 17 Pro simulé) et iOS 27.1 (iPhone Duo simulé). Le test installe une application vierge et attend le téléchargement effectif dans la WKWebView : 401 chaînes, respectivement 27 545 et 27 548 programmes, dont 3 091 et 3 092 programmes sportifs. Processus vivant et captures du guide affiché confirmés. Les captures montrent les cinq commandes de navigation UIKit, dont Sport. Ces essais ne valident pas la signature d’une IPA resignée sur l’iPhone physique de l’utilisateur.
 
 ## Historique : correction du démarrage en 0.1.1
 

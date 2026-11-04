@@ -2,13 +2,13 @@
 
 **Version 0.2.0 : guide TV automatique.** Dès la première ouverture, l’application télécharge le guide France complet de XML TV Fr (401 chaînes référencées lors du contrôle). Aucun fichier à importer, aucune clé à saisir. L’onglet Sport affiche matchs et événements avec leurs précisions, horaires et chaînes, avec une recherche par équipe ou compétition. Actualisation toutes les six heures lorsque l’application est ouverte, au retour dans l’application si nécessaire et au retour de la connexion ; dernière copie conservée localement. Les programmes et images proviennent de la source, les dates ne sont jamais inventées. Voir [la source et le cache](docs/GUIDE-TV.md).
 
-**Version 0.1.1 : runtime Capacitor/Cordova lié statiquement.** Cette version retire les deux frameworks dynamiques à signer séparément, après identification d’un rejet de signature de `Capacitor.framework` au démarrage. Une signature valide de l’application et un provisionnement adapté restent indispensables sur iPhone.
+**Le correctif de démarrage 0.1.1 est conservé : runtime Capacitor/Cordova lié statiquement.** Il retire les deux frameworks dynamiques à signer séparément, après identification d’un rejet de signature de `Capacitor.framework` au démarrage. Une signature valide de l’application et un provisionnement adapté restent indispensables sur iPhone.
 
 **Reconstruction du 3 novembre 2026.** L’archive `a-laffiche-pwa.zip` de la conversation précédente n’était pas accessible. Ce projet reprend sa description ; ce n’est pas une conversion vérifiée de ses fichiers d’origine. Depuis la version 0.2.0, le guide est récupéré automatiquement auprès de XML TV Fr.
 
 Le projet contient une PWA fonctionnelle et une application iOS hybride : **navigation, onglets et recherche natifs UIKit**, catalogue embarqué dans **Capacitor / WKWebView**. Les cartes, catégories, fiches et favoris sont rendus en HTML/CSS. Il ne s’agit donc pas d’une interface intégralement écrite en SwiftUI.
 
-**La version 0.1.1 compile pour iPhone et se lance sur les simulateurs iOS 26.2 et 27.1.** Voir la [compilation iPhone](https://github.com/akaRukasu/L-affiche/actions/runs/41688472565) et les [tests de lancement](https://github.com/akaRukasu/L-affiche/actions/runs/41688472544). L’IPA fournie est non signée et doit recevoir une signature et un provisionnement valides avant installation sur iPhone.
+**La version 0.2.0 compile pour iPhone arm64.** Voir la [compilation iPhone 0.2.0](https://github.com/akaRukasu/L-affiche/actions/runs/41850227333). Les [essais natifs 0.2.0](https://github.com/akaRukasu/L-affiche/actions/runs/41850227542) ont réussi sous iOS 26.2 et 27.1 : ouverture, téléchargement automatique du guide complet et présence des programmes sportifs vérifiés sur simulateurs. L’IPA fournie est non signée et doit recevoir une signature et un provisionnement valides avant installation sur iPhone.
 
 ## Ce qui fonctionne
 
@@ -76,7 +76,7 @@ Cet artefact contient une application pour le **simulateur sur Mac**. Il n’est
 
 Le workflow **Produire une IPA iPhone non signée** compile une version Release **pour iPhone arm64**, puis crée `A-LAFFICHE-0.2.0-NON-SIGNEE.ipa`. Il se lance automatiquement pour les changements du projet ou manuellement dans Actions. Après succès, télécharger l’artefact **A-LAFFICHE-IPA-NON-SIGNEE-…** et extraire le fichier `.ipa` du ZIP GitHub.
 
-L’IPA 0.1.1 a été produite et vérifiée le 3 novembre 2026 : [compilation réussie et téléchargement](https://github.com/akaRukasu/L-affiche/actions/runs/41688472565). Les artefacts GitHub sont conservés sept jours ; relancer le workflow pour obtenir un nouveau téléchargement après expiration.
+L’IPA 0.2.0 a été produite et vérifiée le 4 novembre 2026 : [compilation réussie et téléchargement](https://github.com/akaRukasu/L-affiche/actions/runs/41850227333). Les artefacts GitHub sont conservés sept jours ; relancer le workflow pour obtenir un nouveau téléchargement après expiration.
 
 **Cette IPA n’a pas de signature Apple de distribution valide et ne peut pas être installée telle quelle sur un iPhone.** Elle devra être signée et provisionnée correctement. Le contrôle vérifie la structure `Payload`, la plateforme iPhoneOS du bundle et la plateforme iOS du binaire arm64. Il rejette une version simulateur, même si son fichier de métadonnées a été renommé.
 
@@ -84,9 +84,9 @@ Pour obtenir directement une IPA signée, utiliser le workflow suivant avec les 
 
 ## Vérifier le lancement
 
-Le workflow **Tester le lancement iPhone** compile la version Release, l’installe sur un simulateur compatible et vérifie que son processus reste actif pendant les quinze premières secondes. Il conserve les journaux et une capture lorsqu’elle est disponible. Il couvre iOS 26 et iOS 27 ; le modèle de simulateur dépend des modèles pris en charge par chaque runtime.
+Le workflow **Tester le lancement iPhone** compile la version Release, l’installe sur un simulateur compatible et vérifie que son processus reste actif pendant les quinze premières secondes. Il conserve les journaux et une capture lorsqu’elle est disponible. Il vérifie aussi le chargement automatique du guide France complet et la présence de programmes sportifs. Il couvre iOS 26 et iOS 27 ; le modèle de simulateur dépend des modèles pris en charge par chaque runtime.
 
-Les deux essais de la version 0.1.1 dans [l’exécution 41688472544](https://github.com/akaRukasu/L-affiche/actions/runs/41688472544) ont réussi : iOS 26.2 sur iPhone 17 Pro simulé et iOS 27.1 sur iPhone Duo simulé. Le rendu du catalogue a aussi été confirmé sur les captures iOS 26.2 et iOS 27.1. Ces essais ne valident pas une IPA resignée sur un appareil réel : un éventuel plantage sur iPhone demande le rapport de cet appareil.
+Historique du correctif de signature : les deux essais de la version 0.1.1 dans [l’exécution 41688472544](https://github.com/akaRukasu/L-affiche/actions/runs/41688472544) ont réussi : iOS 26.2 sur iPhone 17 Pro simulé et iOS 27.1 sur iPhone Duo simulé. Le rendu du catalogue a aussi été confirmé sur les captures iOS 26.2 et iOS 27.1. Ces essais ne valident pas une IPA resignée sur un appareil réel : un éventuel plantage sur iPhone demande le rapport de cet appareil.
 
 ## Obtenir une IPA signée
 
